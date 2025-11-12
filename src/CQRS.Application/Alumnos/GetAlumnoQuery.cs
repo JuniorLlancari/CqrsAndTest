@@ -1,39 +1,34 @@
 ﻿using AutoMapper;
 using CQRS.Application.DTOs;
-using CQRS.Persistence;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Alumnos;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using static CQRS.Application.Cursos.GetCursoQuery;
 
 namespace CQRS.Application.Alumnos
 {
 
-    public class GetAlumnoQuery
-    {
-        public class GetAlumnoQueryRequest : IRequest<List<AlumnoDto>> { };
+   
+        public class GetAlumnoQueryRequest : IRequest<Result<List<AlumnoDto>>> { };
 
-        public class GetAlumnoQueryHandler : IRequestHandler<GetAlumnoQueryRequest, List<AlumnoDto>>
+        public class GetAlumnoQueryHandler : IRequestHandler<GetAlumnoQueryRequest, Result<List<AlumnoDto>>>
         {
-            private readonly CQRSDbContext _context;
+            private readonly  IAlumnoRepository _alumnoRepository;
             private readonly IMapper _mapper;
-
-            public GetAlumnoQueryHandler(CQRSDbContext context, IMapper mapper)
+            public GetAlumnoQueryHandler(IAlumnoRepository alumnoRepository, IMapper mapper)
             {
-                _context = context;
+                _alumnoRepository = alumnoRepository;
                 _mapper = mapper;
             }
 
 
-            public async Task<List<AlumnoDto>> Handle(GetAlumnoQueryRequest request, CancellationToken cancellationToken)
+            public async Task<Result<List<AlumnoDto>>> Handle(GetAlumnoQueryRequest request, CancellationToken cancellationToken)
             {
-                var alumnos = await _context.Alumnos.ToListAsync();
-                return _mapper.Map<List<AlumnoDto>>(alumnos);
-                 
-
-
+                var alumnos = await _alumnoRepository.ListarAsync(a => true);
+                var resultado = _mapper.Map<List<AlumnoDto>>(alumnos);
+                return Result.Success(resultado);
             }
         }
 
 
-    }
+    
 }

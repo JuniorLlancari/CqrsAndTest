@@ -1,10 +1,4 @@
-﻿using AutoFixture;
-using AutoMapper;
-using CQRS.Application.Cursos;
-using CQRS.Application.NUnitTests.Helper;
-using CQRS.Domain.Entities;
-using CQRS.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using CQRS.Application.Cursos;
 using NUnit.Framework;
 
 namespace CQRS.Application.NUnitTests
@@ -17,22 +11,22 @@ namespace CQRS.Application.NUnitTests
         [SetUp]
         public void Setup()
         {
-            var fixture = new Fixture();
-            var cursoRecords = fixture.CreateMany<Curso>().ToList();
-            cursoRecords.Add(fixture.Build<Curso>().With(tr => tr.CursoId, Guid.Empty).Create());
+            //var fixture = new Fixture();
+            //var cursoRecords = fixture.CreateMany<Curso>().ToList();
+            //cursoRecords.Add(fixture.Build<Curso>().With(tr => tr.CursoId, Guid.Empty).Create());
 
-            var options = new DbContextOptionsBuilder<CQRSDbContext>()
-                .UseInMemoryDatabase(databaseName: $"EducationDbCotext-{Guid.NewGuid()}").Options;
+            //var options = new DbContextOptionsBuilder<CQRSDbContext>()
+            //    .UseInMemoryDatabase(databaseName: $"EducationDbCotext-{Guid.NewGuid()}").Options;
 
-            var dbContextFake = new CQRSDbContext(options);
-            dbContextFake.Cursos.AddRange(cursoRecords);
-            dbContextFake.SaveChanges();
+            //var dbContextFake = new CQRSDbContext(options);
+            //dbContextFake.Cursos.AddRange(cursoRecords);
+            //dbContextFake.SaveChanges();
 
-            var mapConfig = new MapperConfiguration(cfg => cfg.AddProfile(new MappingTest()));
+            //var mapConfig = new MapperConfiguration(cfg => cfg.AddProfile(new MappingTest()));
 
-            var mapper=mapConfig.CreateMapper();
+            //var mapper=mapConfig.CreateMapper();
 
-            handlerAllCurso = new GetCursoQuery.GetCursoQueryHandler(dbContextFake, mapper);
+            //handlerAllCurso = new GetCursoQuery.GetCursoQueryHandler(dbContextFake, mapper);
 
 
 

@@ -9,7 +9,7 @@ namespace CQRS.Application.DTOs
 {
     public class MatriculaDto
     {
-        public Guid MatriculaId { get; set; }
+        public Guid Id { get; set; }
         public DateTime FechaMatricula { get; set; } = DateTime.UtcNow;
 
         public Guid AlumnoId { get; set; }
@@ -17,6 +17,7 @@ namespace CQRS.Application.DTOs
 
         public Guid CursoId { get; set; }
         public string NombreCurso  { get; set; } = null!;
+        public string Codigo { get; set; }
 
     }
 }

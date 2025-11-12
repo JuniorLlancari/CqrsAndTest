@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CQRS.Application.DTOs;
-using CQRS.Domain.Entities;
+using CQRS.Domain.Cursos;
 
 namespace CQRS.Application.XUnitTests.Helper
 {

@@ -22,32 +22,34 @@ namespace CQRS.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CQRS.Domain.Alumno", b =>
+            modelBuilder.Entity("CQRS.Domain.Alumnos.Alumno", b =>
                 {
-                    b.Property<Guid>("AlumnoId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreAlumno")
                         .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.HasKey("AlumnoId");
+                    b.HasKey("Id");
 
                     b.ToTable("Alumnos");
                 });
 
-            modelBuilder.Entity("CQRS.Domain.Curso", b =>
+            modelBuilder.Entity("CQRS.Domain.Cursos.Curso", b =>
                 {
-                    b.Property<Guid>("CursoId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime2");
@@ -60,43 +62,25 @@ namespace CQRS.Persistence.Migrations
                         .HasColumnType("decimal(14,2)");
 
                     b.Property<string>("Titulo")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CursoId");
+                    b.HasKey("Id");
 
                     b.ToTable("Cursos");
-
-                    b.HasData(
-                        new
-                        {
-                            CursoId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Descripcion = "Curso de c#  de 0 a experto",
-                            FechaCreacion = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FechaPublicacion = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Precio = 56m,
-                            Titulo = "Curso C#"
-                        },
-                        new
-                        {
-                            CursoId = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Descripcion = "Curso de Java de 0 a experto",
-                            FechaCreacion = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FechaPublicacion = new DateTime(2025, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Precio = 82m,
-                            Titulo = "Curso Java"
-                        });
                 });
 
-            modelBuilder.Entity("CQRS.Domain.Matricula", b =>
+            modelBuilder.Entity("CQRS.Domain.Matriculas.Matricula", b =>
                 {
-                    b.Property<Guid>("MatriculaId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AlumnoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CursoId")
                         .HasColumnType("uniqueidentifier");
@@ -104,7 +88,7 @@ namespace CQRS.Persistence.Migrations
                     b.Property<DateTime>("FechaMatricula")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("MatriculaId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AlumnoId");
 
@@ -113,15 +97,15 @@ namespace CQRS.Persistence.Migrations
                     b.ToTable("Matriculas");
                 });
 
-            modelBuilder.Entity("CQRS.Domain.Matricula", b =>
+            modelBuilder.Entity("CQRS.Domain.Matriculas.Matricula", b =>
                 {
-                    b.HasOne("CQRS.Domain.Alumno", "Alumno")
+                    b.HasOne("CQRS.Domain.Alumnos.Alumno", "Alumno")
                         .WithMany("Matriculas")
                         .HasForeignKey("AlumnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CQRS.Domain.Curso", "Curso")
+                    b.HasOne("CQRS.Domain.Cursos.Curso", "Curso")
                         .WithMany("Matriculas")
                         .HasForeignKey("CursoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -132,12 +116,12 @@ namespace CQRS.Persistence.Migrations
                     b.Navigation("Curso");
                 });
 
-            modelBuilder.Entity("CQRS.Domain.Alumno", b =>
+            modelBuilder.Entity("CQRS.Domain.Alumnos.Alumno", b =>
                 {
                     b.Navigation("Matriculas");
                 });
 
-            modelBuilder.Entity("CQRS.Domain.Curso", b =>
+            modelBuilder.Entity("CQRS.Domain.Cursos.Curso", b =>
                 {
                     b.Navigation("Matriculas");
                 });

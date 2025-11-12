@@ -1,18 +1,17 @@
-﻿using CQRS.Domain;
-using CQRS.Persistence;
+﻿using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Cursos;
 using FluentValidation;
 using MediatR;
 
 namespace CQRS.Application.Cursos
 {
-    public class CreateCursoCommandRequest :IRequest
+
+    public class CreateCursoCommandRequest :IRequest<Result<Guid>>
     {
-        public Guid CursoId { get; set; }
         public string Titulo { get; set; }
         public string Descripcion { get; set;}
         public DateTime FechaPublicacion { get; set; }
         public decimal Precio { get; set; }
-
     }
 
     public class CreateCursoCommandRequestValidator: AbstractValidator<CreateCursoCommandRequest>
@@ -24,35 +23,34 @@ namespace CQRS.Application.Cursos
         }
     }
 
-
-
-    public class CreateCursoCommandHandler : IRequestHandler<CreateCursoCommandRequest>
+    public class CreateCursoCommandHandler : IRequestHandler<CreateCursoCommandRequest, Result<Guid>>
     {
-        private readonly CQRSDbContext _context;
-        public CreateCursoCommandHandler(CQRSDbContext context)
+        private readonly ICursoRepository _cursoRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CreateCursoCommandHandler(ICursoRepository cursoRepository,IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _cursoRepository = cursoRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(CreateCursoCommandRequest request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreateCursoCommandRequest request, CancellationToken cancellationToken)
         {
-            var curso = new Curso()
-            {
-                CursoId = Guid.NewGuid(),
-                Titulo = request.Titulo,
-                Descripcion = request.Descripcion,
-                FechaCreacion = DateTime.UtcNow,
-                FechaPublicacion = request.FechaPublicacion,
-                Precio = request.Precio,
-            };
-            _context.Add(curso);
-            var respuesta = await _context.SaveChangesAsync();
-            if (respuesta > 0)
-            {
-                return Unit.Value;
-            }
-
-            throw new NotImplementedException();
+        
+            var curso = Curso.Create(
+                request.Titulo,
+                request.Descripcion,
+                request.FechaPublicacion,
+                request.Precio               
+                );
+           
+            await _cursoRepository.AgregarAsync(curso);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+         
+            return Result.Success(curso.Id);
+          
         }
+
+       
     }
 }

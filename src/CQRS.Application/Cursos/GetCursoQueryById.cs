@@ -1,34 +1,34 @@
 ﻿using AutoMapper;
 using CQRS.Application.DTOs;
-using CQRS.Persistence;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Cursos;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CQRS.Application.Cursos
 {
     public class GetCursoQueryById
     {
-        public class GetCursoQueryByIdRequest : IRequest<CursoDto> 
+        public class GetCursoQueryByIdRequest : IRequest<Result<CursoDto>> 
         {
             public Guid Id { get; set; }
         }
 
-        public class GetCursoQueryByIdHandler : IRequestHandler<GetCursoQueryByIdRequest, CursoDto>
+        public class GetCursoQueryByIdHandler : IRequestHandler<GetCursoQueryByIdRequest, Result<CursoDto>>
         {
-            private readonly CQRSDbContext _context;
+            private readonly ICursoRepository _cursoRepository;
             private readonly IMapper _mapper;
 
-            public GetCursoQueryByIdHandler(CQRSDbContext context, IMapper mapper)
+            public GetCursoQueryByIdHandler(ICursoRepository cursoRepository, IMapper mapper)
             {
-                _context = context;
+                _cursoRepository = cursoRepository;
                 _mapper = mapper;
             }
 
-            public async Task<CursoDto> Handle(GetCursoQueryByIdRequest request, CancellationToken cancellationToken)
+            public async Task<Result<CursoDto>> Handle(GetCursoQueryByIdRequest request, CancellationToken cancellationToken)
             {
-                var curso = await _context.Cursos.FirstOrDefaultAsync(x => x.CursoId == request.Id);
+                var curso = await _cursoRepository.ListarAsync(x => true);
                 var cursoDto = _mapper.Map<CursoDto>(curso);
-                return cursoDto;
+                return Result.Success(cursoDto);
             }
         }
 

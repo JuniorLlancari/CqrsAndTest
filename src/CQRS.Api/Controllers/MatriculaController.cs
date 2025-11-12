@@ -4,7 +4,6 @@ using CQRS.Application.Matriculas;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static CQRS.Application.Matriculas.CreateMatriculaCommand;
 
 namespace CQRS.Api.Controllers
 {
@@ -21,15 +20,15 @@ namespace CQRS.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<MatriculaDto>>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _mediator.Send(new GetMatriculaQuery.GetMatriculaQueryRequest { });
+            return Ok(await _mediator.Send(new GetMatriculaQuery.GetMatriculaQueryRequest { }));
         }
 
         [HttpPost]
         public async Task<ActionResult<Unit>> Post(CreateMatriculaCommandRequest request)
         {
-            return await _mediator.Send(request);
+            return Ok(await _mediator.Send(request));
         }
 
 

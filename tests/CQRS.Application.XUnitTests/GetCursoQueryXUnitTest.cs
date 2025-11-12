@@ -1,10 +1,4 @@
-﻿using AutoFixture;
-using AutoMapper;
-using CQRS.Application.Cursos;
-using CQRS.Application.XUnitTests.Helper;
-using CQRS.Domain.Entities;
-using CQRS.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using CQRS.Application.Cursos;
 
 namespace CQRS.Application.XUnitTests
 {
@@ -15,24 +9,24 @@ namespace CQRS.Application.XUnitTests
 
         public GetCursoQueryXUnitTest()
         {
-            // Fixture para datos de prueba
-            var fixture = new Fixture();
-            var cursoRecords = fixture.CreateMany<Curso>().ToList();
-            cursoRecords.Add(fixture.Build<Curso>().With(tr => tr.CursoId, Guid.Empty).Create());
+            //// Fixture para datos de prueba
+            //var fixture = new Fixture();
+            //var cursoRecords = fixture.CreateMany<Curso>().ToList();
+            //cursoRecords.Add(fixture.Build<Curso>().With(tr => tr.CursoId, Guid.Empty).Create());
 
-            // DbContext en memoria
-            var options = new DbContextOptionsBuilder<CQRSDbContext>()
-                .UseInMemoryDatabase(databaseName: $"EducationDbContext-{Guid.NewGuid()}").Options;
+            //// DbContext en memoria
+            //var options = new DbContextOptionsBuilder<CQRSDbContext>()
+            //    .UseInMemoryDatabase(databaseName: $"EducationDbContext-{Guid.NewGuid()}").Options;
 
-            var dbContextFake = new CQRSDbContext(options);
-            dbContextFake.Cursos.AddRange(cursoRecords);
-            dbContextFake.SaveChanges();
+            //var dbContextFake = new CQRSDbContext(options);
+            //dbContextFake.Cursos.AddRange(cursoRecords);
+            //dbContextFake.SaveChanges();
 
-            // AutoMapper
-            var mapConfig = new MapperConfiguration(cfg => cfg.AddProfile(new MappingTest()));
-            var mapper = mapConfig.CreateMapper();
+            //// AutoMapper
+            //var mapConfig = new MapperConfiguration(cfg => cfg.AddProfile(new MappingTest()));
+            //var mapper = mapConfig.CreateMapper();
 
-            _handlerAllCurso = new GetCursoQuery.GetCursoQueryHandler(dbContextFake, mapper);
+            //_handlerAllCurso = new GetCursoQuery.GetCursoQueryHandler(dbContextFake, mapper);
         }
 
         [Fact] // atributo para pruebas unitarias en xUnit

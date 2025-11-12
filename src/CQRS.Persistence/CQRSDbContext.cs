@@ -1,30 +1,27 @@
 ﻿using CQRS.Domain.Abstraccions;
-using CQRS.Domain.Entities;
+using CQRS.Domain.Alumnos;
+using CQRS.Domain.Cursos;
+using CQRS.Domain.Matriculas;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CQRS.Persistence
 {
     public class CQRSDbContext : DbContext, IUnitOfWork
     {
-        public CQRSDbContext()
+        public readonly IPublisher _publisher;
+
+        public CQRSDbContext() {}
+
+        public CQRSDbContext(DbContextOptions<CQRSDbContext> options):base(options){ }
+        public CQRSDbContext(DbContextOptions<CQRSDbContext> options, IPublisher publisher) : base(options) 
         {
-                
+            _publisher = publisher;
         }
 
-        public CQRSDbContext(DbContextOptions<CQRSDbContext> options):base(options)
-        {
-            
-        }
-
-        public DbSet<Curso> Cursos { get; set; }
-        public DbSet<Alumno> Alumnos { get; set; }
-        public DbSet<Matricula> Matriculas { get; set; }
+        public virtual  DbSet<Curso> Cursos { get; set; }
+        public virtual  DbSet<Alumno> Alumnos { get; set; }
+        public virtual DbSet<Matricula> Matriculas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,7 +29,13 @@ namespace CQRS.Persistence
 
             modelBuilder.Entity<Alumno>().Property(c => c.NombreAlumno).HasMaxLength(25);
 
-            // Configuración de relaciones
+            modelBuilder.Entity<Alumno>().Property(usuario => usuario.Estado)
+                .HasConversion(
+                    estado => estado.ToString(),
+                    estado => (AlumnoEstado)Enum.Parse(typeof(AlumnoEstado), estado)
+                );
+
+
             modelBuilder.Entity<Matricula>()
                 .HasOne(m => m.Alumno)
                 .WithMany(a => a.Matriculas)
@@ -46,28 +49,19 @@ namespace CQRS.Persistence
             var fechaCreacion = new DateTime(2025, 1, 1);
             var fechaPublicacion = new DateTime(2025, 12, 12);
 
-            modelBuilder.Entity<Curso>().HasData(
-                new Curso
-                {
-                    CursoId = new Guid("11111111-1111-1111-1111-111111111111"),
-                    Descripcion = "Curso de c#  de 0 a experto",
-                    Titulo= "Curso C#",
-                    FechaCreacion= fechaCreacion,
-                    FechaPublicacion= fechaPublicacion,
-                    Precio=56
-                }               
-            );
-            modelBuilder.Entity<Curso>().HasData(
-                new Curso
-                {
-                    CursoId = new Guid("22222222-2222-2222-2222-222222222222"),
-                    Descripcion = "Curso de Java de 0 a experto",
-                    Titulo = "Curso Java",
-                    FechaCreacion = fechaCreacion,
-                    FechaPublicacion = fechaPublicacion,
-                    Precio = 82
-                }
-            );
+            //modelBuilder.Entity<Curso>().HasData(
+            //Curso.Create(
+            //    "Curso de c#  de 0 a experto",
+            //    "Curso C#",
+            //    fechaPublicacion,
+            //    56));
+
+
+            //modelBuilder.Entity<Curso>().HasData(
+            //    Curso.Create("Curso de Java de 0 a experto",
+            //    "Curso Java",fechaPublicacion,82)
+                
+            //);
 
 
             base.OnModelCreating(modelBuilder);
@@ -78,6 +72,7 @@ namespace CQRS.Persistence
             try
             {
                 var result = await base.SaveChangesAsync(cancellationToken);
+                await PublishDomainEventsAsync();
                 return result;
             }
             catch (DbUpdateConcurrencyException ex)
@@ -98,6 +93,28 @@ namespace CQRS.Persistence
                 throw;
             }
         }
+
+        private async Task PublishDomainEventsAsync()
+        {
+            var domainEvents = ChangeTracker
+            .Entries<Entity>()
+            .Select(entry => entry.Entity)
+            .SelectMany(entity =>
+            {
+                var domainEvents = entity.GetDomainEvents();
+                entity.ClearDomainEvents();
+                return domainEvents;
+            }).ToList();
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _publisher.Publish(domainEvent);
+            }
+
+        }
+
+
+
 
     }
 }

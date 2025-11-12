@@ -17,21 +17,21 @@ namespace CQRS.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CursoDto>>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _mediator.Send(new GetCursoQuery.GetCursoQueryRequest());
+            return Ok(await _mediator.Send(new GetCursoQuery.GetCursoQueryRequest()));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Post(CreateCursoCommandRequest request)
+        public async Task<IActionResult> Post(CreateCursoCommandRequest request)
         {
-            return await _mediator.Send(request);
+            return Ok(await _mediator.Send(request));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CursoDto>> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return await _mediator.Send(new GetCursoQueryById.GetCursoQueryByIdRequest { Id = id });
+            return Ok(await _mediator.Send(new GetCursoQueryById.GetCursoQueryByIdRequest { Id = id }));
         }
 
 

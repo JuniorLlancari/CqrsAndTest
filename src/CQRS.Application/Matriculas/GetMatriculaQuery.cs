@@ -1,40 +1,32 @@
 ﻿using AutoMapper;
 using CQRS.Application.DTOs;
-using CQRS.Persistence;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Matriculas;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CQRS.Application.Matriculas
 {
     public class GetMatriculaQuery
     {
-        public class GetMatriculaQueryRequest : IRequest<List<MatriculaDto>> { }
+        public class GetMatriculaQueryRequest : IRequest<Result<List<MatriculaDto>>> { }
 
-        public class GetMatriculaQueryHandler : IRequestHandler<GetMatriculaQueryRequest, List<MatriculaDto>>
+        public class GetMatriculaQueryHandler : IRequestHandler<GetMatriculaQueryRequest, Result<List<MatriculaDto>>>
         {
 
-            private readonly CQRSDbContext _context;
+            private readonly IMatriculaRepository _matriculaRepository;
             private readonly IMapper _mapper;
 
-            public GetMatriculaQueryHandler(CQRSDbContext context, IMapper mapper)
+            public GetMatriculaQueryHandler(IMatriculaRepository matriculaRepository, IMapper mapper)
             {
-                _context = context;
+                _matriculaRepository= matriculaRepository;
                 _mapper = mapper;
             }
 
-            public async Task<List<MatriculaDto>> Handle(GetMatriculaQueryRequest request, CancellationToken cancellationToken)
+            public async Task<Result<List<MatriculaDto>>> Handle(GetMatriculaQueryRequest request, CancellationToken cancellationToken)
             {
-                var matriculas = await _context.Matriculas.ToListAsync(cancellationToken: cancellationToken);
+                var matriculas = await _matriculaRepository.ListarAsync(a => true,false,"Curso,Alumno");
                 var matriculasDto = _mapper.Map<List<MatriculaDto>>(matriculas);
-
-                return matriculasDto;
-
-
+                return Result.Success(matriculasDto);
             }
         }
 

@@ -8,7 +8,7 @@ namespace CQRS.Application.DTOs
 {
     public class AlumnoDto
     {
-        public Guid AlumnoId { get; set; }
+        public Guid Id { get; set; }
         public string NombreAlumno { get; set; }
     }
 }

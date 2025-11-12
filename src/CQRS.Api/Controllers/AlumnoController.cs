@@ -1,8 +1,6 @@
-﻿using Azure.Core;
-using CQRS.Application.Alumnos;
+﻿using CQRS.Application.Alumnos;
 using CQRS.Application.DTOs;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CQRS.Api.Controllers
@@ -20,15 +18,16 @@ namespace CQRS.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Post(CreateAlumnoRequest request)
+        public async Task<IActionResult> Post(CreateAlumnoCommandRequest request)
         {
-            return await _mediator.Send(request);           
+            return Ok(await _mediator.Send(request));           
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AlumnoDto>>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _mediator.Send(new GetAlumnoQuery.GetAlumnoQueryRequest());
+            var result = await _mediator.Send(new GetAlumnoQueryRequest());
+            return Ok(result);
         }
 
     } 

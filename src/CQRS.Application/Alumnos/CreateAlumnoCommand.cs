@@ -1,51 +1,40 @@
 ﻿using AutoMapper;
-using CQRS.Domain;
-using CQRS.Persistence;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Alumnos;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CQRS.Application.Alumnos
 {
-    public class CreateAlumnoRequest :IRequest
+    public class CreateAlumnoCommandRequest :IRequest<Result<Guid>>
     {
-        public Guid AlumnoId { get; set; }
         public string NombreAlumno { get; set; }
     }
     public class CreateAlumnoResponse
     {
-        public Guid AlumnoId { get; set; }
         public string NombreAlumno { get; set; }
     }
 
-    public class CreateAlumnoCommandHandler : IRequestHandler<CreateAlumnoRequest>
+    public class CreateAlumnoCommandHandler : IRequestHandler<CreateAlumnoCommandRequest, Result<Guid>>
     {
-        private readonly CQRSDbContext _context;
+        private readonly IAlumnoRepository _alumnoRepository;
         private readonly IMapper _mapper;
-
-        public CreateAlumnoCommandHandler(CQRSDbContext context, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        public CreateAlumnoCommandHandler(IAlumnoRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _alumnoRepository = repository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
-
-        public async Task<Unit> Handle(CreateAlumnoRequest request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreateAlumnoCommandRequest request, CancellationToken cancellationToken)
         {
-            var alumno = new Alumno()
-            {
-                AlumnoId = request.AlumnoId,
-                NombreAlumno = request.NombreAlumno
-            };
+            var alumno = Alumno.Create(request.NombreAlumno);
+            await _alumnoRepository.AgregarAsync(alumno);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 
-            _context.Add(alumno);
-            var respuesta = await _context.SaveChangesAsync(cancellationToken);
-            if (respuesta > 0)
-            {
-                return Unit.Value;
-            }
 
-            throw new NotImplementedException();
-        }
+            return Result.Success(alumno.Id);
+        }  
     }
 }

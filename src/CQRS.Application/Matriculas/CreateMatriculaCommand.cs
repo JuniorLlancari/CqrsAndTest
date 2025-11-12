@@ -1,63 +1,87 @@
-﻿using CQRS.Domain;
-using CQRS.Persistence;
+﻿using CQRS.Application.Alumnos;
+using CQRS.Application.Cursos;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Alumnos;
+using CQRS.Domain.Cursos;
+using CQRS.Domain.Matriculas;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CQRS.Application.Matriculas
 {
-    public class CreateMatriculaCommand
+    public class CreateMatriculaCommandRequest : IRequest<Result<Guid>> 
     {
-        public class CreateMatriculaCommandRequest : IRequest<Unit> 
-        {
-            public Guid MatriculaId { get; set; }
-            public Guid CursoId { get; set; }
-            public Guid AlumnoId { get; set; }
+        public Guid CursoId { get; set; }
+        public Guid AlumnoId { get; set; }
+        public string Codigo { get; set; }
 
+    }
+
+    public class CreateMatriculaCommandHanlder : IRequestHandler<CreateMatriculaCommandRequest, Result<Guid>>
+    {
+        private readonly IMatriculaRepository _matriculaRepository;
+        private readonly ICursoRepository _cursoRepository;
+        private readonly IAlumnoRepository _alumnoRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+
+
+        public CreateMatriculaCommandHanlder(
+            IMatriculaRepository matriculaRepository,
+            ICursoRepository cursoRepository,
+            IAlumnoRepository alumnoRepository, 
+            IUnitOfWork unitOfWork
+                )
+        {
+            _unitOfWork = unitOfWork;
+            _matriculaRepository = matriculaRepository;
+            _cursoRepository = cursoRepository;
+            _alumnoRepository = alumnoRepository;
         }
 
-
-
-
-        public class CreateMatriculaCommandHanlder : IRequestHandler<CreateMatriculaCommandRequest, Unit>
+        public  async Task<Result<Guid>> Handle(CreateMatriculaCommandRequest request, CancellationToken cancellationToken)
         {
-            private readonly CQRSDbContext _context;
-            public CreateMatriculaCommandHanlder(CQRSDbContext context)
+            var curso = await _cursoRepository.ObtenerPorIdAsync(request.CursoId, cancellationToken);
+            if (curso == null)
             {
-                _context = context;
+                return Result.Failure<Guid>(CursoError.NoEncontrado);
             }
 
-            public  async Task<Unit> Handle(CreateMatriculaCommandRequest request, CancellationToken cancellationToken)
+            var alumno = await _alumnoRepository.ObtenerPorIdAsync(request.AlumnoId, cancellationToken);
+            if (alumno == null)
             {
-
-                var alumnoRegistrado= await _context.Matriculas
-                    .FirstOrDefaultAsync(cu=>cu.CursoId == request.CursoId && cu.MatriculaId == request.MatriculaId);
-
-                if (alumnoRegistrado != null)
-                {
-                    throw new Exception("Error El alumno ya tiene el curso matriculado");
-                }
-
-
-                var matricula = new Matricula()
-                {
-                     MatriculaId=request.MatriculaId,
-                     AlumnoId = request.AlumnoId,
-                     CursoId = request.CursoId,
-                     FechaMatricula = DateTime.Now
-                };
-
-                _context.Add(matricula);
-                var respuesta = await _context.SaveChangesAsync();
-                if (respuesta > 0)
-                {
-                    return Unit.Value;
-                }
-
-                throw new NotImplementedException();
+                return Result.Failure<Guid>(AlumnoError.NoEncontrado);
             }
+
+
+
+            Expression<Func<Matricula, bool>> filtro = cu =>
+                cu.CursoId == request.CursoId &&
+                cu.AlumnoId == request.AlumnoId &&
+                cu.Codigo == request.Codigo;
+
+            var alumnoRegistrado = await _matriculaRepository.ObtenerPorFiltro(filtro);
+
+            if (alumnoRegistrado != null)
+            {
+                return Result.Failure<Guid>(MatriculaError.TieneMatriculaActiva);
+            }
+
+
+
+
+
+            var matricula = Matricula.Create(DateTime.Now, request.AlumnoId, request.CursoId, request.Codigo);
+                
+            await _matriculaRepository.AgregarAsync(matricula);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success(matricula.Id);
+
+
+
+
+
         }
-
-
-
     }
 }

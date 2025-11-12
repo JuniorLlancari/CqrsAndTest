@@ -1,13 +1,13 @@
-using CQRS.Application.Cursos;
+using CQRS.Application;
 using CQRS.Application.Mapping;
 using CQRS.Persistence;
 using CQRS.Persistence.Data;
 using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -15,11 +15,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<CQRSDbContext>(options =>
-    options.UseSqlServer(connectionString));
 
-builder.Services.AddMediatR(typeof(GetCursoQuery.GetCursoQueryHandler).Assembly);
+builder.Services.AddApplication();
+builder.Services.AddPersistencie(builder.Configuration);
+
+
+//builder.Services.AddMediatR(typeof(GetCursoQuery.GetCursoQueryHandler).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddCors(o => o.AddPolicy("corsApp", builder =>
@@ -30,6 +31,9 @@ builder.Services.AddCors(o => o.AddPolicy("corsApp", builder =>
 var app = builder.Build();
 
 app.UseCors("corsApp");
+
+
+
 
 
 using (var scope = app.Services.CreateScope())
