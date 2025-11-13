@@ -41,12 +41,12 @@ namespace CQRS.Domain.Matriculas
         }
 
 
-        public DateTime FechaMatricula { get; set; } = DateTime.UtcNow;
-        public Guid AlumnoId { get; set; }
-        public Alumno Alumno { get; set; } = null!;
-        public Guid CursoId { get; set; }
-        public Curso Curso { get; set; } = null!;
-        public string Codigo { get; set; }
+        public DateTime FechaMatricula { get; private set; } = DateTime.UtcNow;
+        public Guid AlumnoId { get; private set; }
+        public Alumno Alumno { get; private set; } = null!;
+        public Guid CursoId { get; private set; }
+        public Curso Curso { get; private set; } = null!;
+        public string Codigo { get; private set; }
 
     }
 }

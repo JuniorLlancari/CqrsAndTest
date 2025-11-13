@@ -9,9 +9,6 @@ namespace CQRS.Persistence.Repositories
 {
     internal class MatriculaRepository : Repository<Matricula>,IMatriculaRepository
     {
-        public MatriculaRepository(CQRSDbContext context):base(context) { }
-        
-                
-        
+        public MatriculaRepository(CQRSDbContext context):base(context) { }     
     }
 }

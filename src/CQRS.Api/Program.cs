@@ -42,7 +42,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = scopedProvider.GetRequiredService<CQRSDbContext>();
-        await CQRSDbContextSeed.SeedAsync(context);
+        await CQRSDbContextSeed.InitialiseDatabaseAsync(context);
     }
     catch (Exception ex)
     {

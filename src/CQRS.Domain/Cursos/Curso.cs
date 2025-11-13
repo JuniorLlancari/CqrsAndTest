@@ -44,15 +44,15 @@ namespace CQRS.Domain.Cursos
             return usuario;
         }
 
-        public string? Titulo { get; set; }
+        public string? Titulo { get; private set; }
 
-        public string? Descripcion { get; set; }
+        public string? Descripcion { get; private set; }
   
-        public DateTime? FechaPublicacion { get; set; }
+        public DateTime? FechaPublicacion { get; private set; }
 
-        public DateTime? FechaCreacion { get; set; }
+        public DateTime? FechaCreacion { get; private set; }
 
-        public decimal Precio { get; set; }
+        public decimal Precio { get; private  set; }
 
         public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
 

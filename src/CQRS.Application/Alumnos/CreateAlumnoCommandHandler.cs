@@ -17,12 +17,10 @@ namespace CQRS.Application.Alumnos
     public class CreateAlumnoCommandHandler : IRequestHandler<CreateAlumnoCommandRequest, Result<Guid>>
     {
         private readonly IAlumnoRepository _alumnoRepository;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public CreateAlumnoCommandHandler(IAlumnoRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateAlumnoCommandHandler(IAlumnoRepository repository, IUnitOfWork unitOfWork)
         {
             _alumnoRepository = repository;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -31,9 +29,6 @@ namespace CQRS.Application.Alumnos
             var alumno = Alumno.Create(request.NombreAlumno);
             await _alumnoRepository.AgregarAsync(alumno);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-
-
             return Result.Success(alumno.Id);
         }  
     }

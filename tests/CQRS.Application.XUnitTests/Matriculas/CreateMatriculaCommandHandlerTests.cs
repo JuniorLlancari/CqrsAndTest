@@ -1,152 +1,193 @@
-﻿using CQRS.Application.Matriculas;
-using Microsoft.EntityFrameworkCore;
+﻿using CQRS.Application.Alumnos;
+using CQRS.Application.Cursos;
+using CQRS.Application.Matriculas;
+using CQRS.Domain.Abstraccions;
+using CQRS.Domain.Alumnos;
+using CQRS.Domain.Cursos;
+using CQRS.Domain.Matriculas;
+using Moq;
+using System.Linq.Expressions;
 
 namespace CQRS.Application.XUnitTests.Matriculas
 {
     public class CreateMatriculaCommandHandlerTests
     {
-        //private static CQRSDbContext CreateInMemoryContext()
-        //{
-        //    var options = new DbContextOptionsBuilder<CQRSDbContext>()
-        //        .UseInMemoryDatabase(Guid.NewGuid().ToString())
-        //        .Options;
-        //    return new CQRSDbContext(options);
-        //}
-        //private static async Task<Curso> AddCursoAsync(CQRSDbContext context, Guid cursoId)
-        //{
-        //    var curso = new Curso
-        //    {
-        //        CursoId = cursoId,
-        //        Titulo = "Curso Test",
-        //        Descripcion = "Descripcion Test",
-        //        FechaCreacion = DateTime.UtcNow,
-        //        FechaPublicacion = DateTime.UtcNow,
-        //        Precio = 100
-        //    };
-        //    context.Cursos.Add(curso);
-        //    await context.SaveChangesSeedAndMigrationDataAsync();
-        //    return curso;
-        //}
-        //private static async Task<Alumno> AddAlumnoAsync(CQRSDbContext context, Guid alumnoId)
-        //{
-        //    var alumno = new Alumno
-        //    {
-        //        AlumnoId = alumnoId,
-        //        NombreAlumno = "Alumno Test"
-        //    };
-        //    context.Alumnos.Add(alumno);
-        //    await context.SaveChangesSeedAndMigrationDataAsync();
-        //    return alumno;
-        //}
+        private readonly Mock<IMatriculaRepository> _matriculaRepositoryMock;
+        private readonly Mock<ICursoRepository> _cursoRepositoryMock;
+        private readonly Mock<IAlumnoRepository> _alumnoRepositoryMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
-        //[Fact]
-        //public async Task Handle_ShouldAddMatricula_WhenDataIsValid()
-        //{
-        //    // Arrange
-        //    await using var context = CreateInMemoryContext();
-        //    var cursoId = Guid.NewGuid();
-        //    var alumnoId = Guid.NewGuid();
-        //    var codigo = "MAT-001";
+        private readonly CreateMatriculaCommandHanlder _handler;
 
-        //    await AddCursoAsync(context, cursoId);
-        //    await AddAlumnoAsync(context, alumnoId);
+        public CreateMatriculaCommandHandlerTests()
+        {
+            _matriculaRepositoryMock = new Mock<IMatriculaRepository>();
+            _cursoRepositoryMock = new Mock<ICursoRepository>();
+            _alumnoRepositoryMock = new Mock<IAlumnoRepository>();
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        //    var handler = new CreateMatriculaCommand.CreateMatriculaCommandHanlder(context);
-        //    var command = new CreateMatriculaCommand.CreateMatriculaCommandRequest
-        //    {
-        //        CursoId = cursoId,
-        //        AlumnoId = alumnoId,
-        //        Codigo = codigo,
-        //        MatriculaId = Guid.NewGuid()
-        //    };
+            _handler = new CreateMatriculaCommandHanlder(
+                _matriculaRepositoryMock.Object,
+                _cursoRepositoryMock.Object,
+                _alumnoRepositoryMock.Object,
+                _unitOfWorkMock.Object
+            );
+        }
 
-        //    // Act
-        //    var result = await handler.Handle(command, default);
+        [Fact]
+        public async Task Handle_ShouldFail_WhenCursoNotFound()
+        {
+            // Arrange
+            var request = new CreateMatriculaCommandRequest
+            {
+                CursoId = Guid.NewGuid(),
+                AlumnoId = Guid.NewGuid(),
+                Codigo = "MAT-001"
+            };
 
-        //    // Assert
-        //    var matricula = await context.Matriculas.FirstOrDefaultAsync();
-        //    Assert.NotNull(matricula);
-        //    Assert.Equal(alumnoId, matricula.AlumnoId);
-        //    Assert.Equal(cursoId, matricula.CursoId);
-        //    Assert.Equal(codigo, matricula.Codigo);
-        //}
+            _cursoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Curso?)null);
 
-        //[Fact]
-        //public async Task Handle_ShouldThrow_WhenCursoDoesNotExist()
-        //{
-        //    // Arrange
-        //    await using var context = CreateInMemoryContext();
-        //    var alumno = await AddAlumnoAsync(context, Guid.NewGuid());
-        //    var handler = new CreateMatriculaCommand.CreateMatriculaCommandHanlder(context);
+            // Act
+            var result = await _handler.Handle(request, default);
 
-        //    var command = new CreateMatriculaCommand.CreateMatriculaCommandRequest
-        //    {
-        //        CursoId = Guid.NewGuid(), // no existe
-        //        AlumnoId = alumno.AlumnoId,
-        //        Codigo = "MAT-001",
-        //        MatriculaId = Guid.NewGuid()
-        //    };
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(CursoError.NoEncontrado, result.Error);
+        }
 
-        //    // Act & Assert
-        //    var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, default));
-        //    Assert.Equal("Curso no existe", ex.Message);
-        //}
+        [Fact]
+        public async Task Handle_ShouldFail_WhenAlumnoNotFound()
+        {
+            // Arrange
+            var request = new CreateMatriculaCommandRequest
+            {
+                CursoId = Guid.NewGuid(),
+                AlumnoId = Guid.NewGuid(),
+                Codigo = "MAT-001"
+            };
 
-        //[Fact]
-        //public async Task Handle_ShouldThrow_WhenAlumnoDoesNotExist()
-        //{
-        //    // Arrange
-        //    await using var context = CreateInMemoryContext();
-        //    var curso = await AddCursoAsync(context, Guid.NewGuid());
-        //    var handler = new CreateMatriculaCommand.CreateMatriculaCommandHanlder(context);
+            _cursoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Curso { Id = request.CursoId });
 
-        //    var command = new CreateMatriculaCommand.CreateMatriculaCommandRequest
-        //    {
-        //        CursoId = curso.CursoId,
-        //        AlumnoId = Guid.NewGuid(), // no existe
-        //        Codigo = "MAT-001",
-        //        MatriculaId = Guid.NewGuid()
-        //    };
+            _alumnoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Alumno?)null);
 
-        //    // Act & Assert
-        //    var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, default));
-        //    Assert.Equal("Alumno no existe", ex.Message);
-        //}
+            // Act
+            var result = await _handler.Handle(request, default);
 
-        //[Fact]
-        //public async Task Handle_ShouldThrow_WhenAlumnoAlreadyMatriculado()
-        //{
-        //    // Arrange
-        //    await using var context = CreateInMemoryContext();
-        //    var cursoId = Guid.NewGuid();
-        //    var alumnoId = Guid.NewGuid();
-        //    var codigo = "MAT-001";
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(AlumnoError.NoEncontrado, result.Error);
+        }
 
-        //    await AddCursoAsync(context, cursoId);
-        //    await AddAlumnoAsync(context, alumnoId);
+        [Fact]
+        public async Task Handle_ShouldFail_WhenAlumnoAlreadyMatriculado()
+        {
+            // Arrange
+            var request = new CreateMatriculaCommandRequest
+            {
+                CursoId = Guid.NewGuid(),
+                AlumnoId = Guid.NewGuid(),
+                Codigo = "MAT-001"
+            };
 
-        //    context.Matriculas.Add(new Matricula
-        //    {
-        //        CursoId = cursoId,
-        //        AlumnoId = alumnoId,
-        //        Codigo = codigo,
-        //        FechaMatricula = DateTime.UtcNow,
-        //        MatriculaId = Guid.NewGuid()
-        //    });
-        //    await context.SaveChangesSeedAndMigrationDataAsync();
+            _cursoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Curso { Id = request.CursoId });
 
-        //    var handler = new CreateMatriculaCommand.CreateMatriculaCommandHanlder(context);
-        //    var command = new CreateMatriculaCommand.CreateMatriculaCommandRequest
-        //    {
-        //        CursoId = cursoId,
-        //        AlumnoId = alumnoId,
-        //        Codigo = codigo,
-        //        MatriculaId = Guid.NewGuid()
-        //    };
+            _alumnoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Alumno { Id = request.AlumnoId });
 
-        //    // Act & Assert
-        //    var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, default));
-        //    Assert.Equal("Error El alumno ya tiene el curso matriculado", ex.Message);
-        //}
+            _matriculaRepositoryMock
+                .Setup(r => r.ObtenerPorFiltro(It.IsAny<Expression<Func<Matricula, bool>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Matricula()); // ya existe
+
+            // Act
+            var result = await _handler.Handle(request, default);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(MatriculaError.TieneMatriculaActiva, result.Error);
+        }
+
+        [Fact]
+        public async Task Handle_ShouldSuccess_WhenValidRequest()
+        {
+            // Arrange
+            var request = new CreateMatriculaCommandRequest
+            {
+                CursoId = Guid.NewGuid(),
+                AlumnoId = Guid.NewGuid(),
+                Codigo = "MAT-001"
+            };
+
+            _cursoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Curso { Id = request.CursoId });
+
+            _alumnoRepositoryMock
+                .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Alumno { Id = request.AlumnoId });
+
+            _matriculaRepositoryMock
+                .Setup(r => r.ObtenerPorFiltro(
+                    It.IsAny<Expression<Func<Matricula, bool>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()
+                ))
+            .ReturnsAsync((Matricula?)null);
+
+            _matriculaRepositoryMock
+                .Setup(r => r.AgregarAsync(It.IsAny<Matricula>()))
+                .Returns(Task.CompletedTask);
+
+            _unitOfWorkMock
+                .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1);
+
+            // Act
+            var result = await _handler.Handle(request, default);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.NotEqual(Guid.Empty, result.Value);
+
+
+
+            _alumnoRepositoryMock.Verify(
+            r => r.ObtenerPorIdAsync(request.AlumnoId, It.IsAny<CancellationToken>()),
+            Times.Once);
+
+            _cursoRepositoryMock.Verify(
+                r => r.ObtenerPorIdAsync(request.CursoId, It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _matriculaRepositoryMock.Verify(
+                r => r.ObtenerPorFiltro(
+                    It.IsAny<Expression<Func<Matricula, bool>>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _matriculaRepositoryMock.Verify(
+                r => r.AgregarAsync(It.IsAny<Matricula>()),
+                Times.Once);
+
+            _unitOfWorkMock.Verify(
+                u => u.SaveChangesAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+
+
+
+
+
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace CQRS.Domain.Alumnos
 {
     public class Alumno : Entity
     {
-        private Alumno() { }
+        public Alumno() { }
         private Alumno(Guid alumnoId, string nombreAlumno, AlumnoEstado estado) :base(alumnoId)
         {
             NombreAlumno = nombreAlumno;
@@ -23,7 +23,7 @@ namespace CQRS.Domain.Alumnos
         }
 
 
-        public string NombreAlumno { get; set; }
+        public string NombreAlumno { get; private set; }
         public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
         public AlumnoEstado Estado { get; set; }
     }

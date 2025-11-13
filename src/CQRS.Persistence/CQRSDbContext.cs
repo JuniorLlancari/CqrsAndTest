@@ -46,22 +46,9 @@ namespace CQRS.Persistence
                 .WithMany(c => c.Matriculas)
                 .HasForeignKey(m => m.CursoId);
 
-            var fechaCreacion = new DateTime(2025, 1, 1);
-            var fechaPublicacion = new DateTime(2025, 12, 12);
-
-            //modelBuilder.Entity<Curso>().HasData(
-            //Curso.Create(
-            //    "Curso de c#  de 0 a experto",
-            //    "Curso C#",
-            //    fechaPublicacion,
-            //    56));
 
 
-            //modelBuilder.Entity<Curso>().HasData(
-            //    Curso.Create("Curso de Java de 0 a experto",
-            //    "Curso Java",fechaPublicacion,82)
-                
-            //);
+
 
 
             base.OnModelCreating(modelBuilder);
