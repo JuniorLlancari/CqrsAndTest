@@ -22,7 +22,7 @@ namespace CQRS.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _mediator.Send(new GetMatriculaQuery.GetMatriculaQueryRequest { }));
+            return Ok(await _mediator.Send(new GetMatriculaQueryRequest { }));
         }
 
         [HttpPost]

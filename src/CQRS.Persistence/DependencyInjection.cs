@@ -14,9 +14,14 @@ namespace CQRS.Persistence
         public static IServiceCollection AddPersistencie(this IServiceCollection services, IConfiguration configuration)
         {
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            //var connectionString = configuration.GetConnectionString("DefaultConnection");
+            //services.AddDbContext<CQRSDbContext>(options =>
+            //    options.UseSqlServer(connectionString));
+
             services.AddDbContext<CQRSDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseInMemoryDatabase("CqrsInMemoryDb"));
+
+
 
             services.AddScoped<IAlumnoRepository, AlumnoRepository>();
             services.AddScoped<IMatriculaRepository, MatriculaRepository>();

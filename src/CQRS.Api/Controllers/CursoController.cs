@@ -19,7 +19,7 @@ namespace CQRS.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _mediator.Send(new GetCursoQuery.GetCursoQueryRequest()));
+            return Ok(await _mediator.Send(new GetCursoQueryRequest()));
         }
 
         [HttpPost]
@@ -31,7 +31,7 @@ namespace CQRS.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            return Ok(await _mediator.Send(new GetCursoQueryById.GetCursoQueryByIdRequest { Id = id }));
+            return Ok(await _mediator.Send(new GetCursoQueryByIdRequest { Id = id }));
         }
 
 

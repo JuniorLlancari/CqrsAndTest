@@ -36,26 +36,26 @@ app.UseCors("corsApp");
 
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var scopedProvider = scope.ServiceProvider;
-    try
-    {
-        var context = scopedProvider.GetRequiredService<CQRSDbContext>();
-        await CQRSDbContextSeed.InitialiseDatabaseAsync(context);
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "An error occurred seeding the DB.");
-    }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var scopedProvider = scope.ServiceProvider;
+//    try
+//    {
+//        var context = scopedProvider.GetRequiredService<CQRSDbContext>();
+//        await CQRSDbContextSeed.InitialiseDatabaseAsync(context);
+//    }
+//    catch (Exception ex)
+//    {
+//        app.Logger.LogError(ex, "An error occurred seeding the DB.");
+//    }
+//}
 
 
 
 
 
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
