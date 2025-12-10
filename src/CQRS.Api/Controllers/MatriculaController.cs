@@ -1,8 +1,5 @@
-﻿using CQRS.Application.Cursos;
-using CQRS.Application.DTOs;
-using CQRS.Application.Matriculas;
+﻿using CQRS.Application.Handlers.Matriculas;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CQRS.Api.Controllers

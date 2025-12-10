@@ -1,4 +1,6 @@
-﻿namespace CQRS.Domain.Abstraccions
+﻿using static CQRS.Domain.Abstraccions.Result;
+
+namespace CQRS.Domain.Abstraccions
 {
     public class Result
     {
@@ -36,6 +38,10 @@
          => value is not null
           ? Success(value)
           : Failure<TValue>(Error.NullValue);
+
+        public IEnumerable<ValidationError> ErrorsDetail { get; }
+
+
     }
     public class Result<Tvalue> : Result
     {
@@ -51,5 +57,6 @@
 
     }
 
+    public record ValidationError(string PropertyName, string ErrorMessage);
 
 }

@@ -1,4 +1,4 @@
-﻿using CQRS.Domain.Matriculas;
+﻿using CQRS.Domain.Entities.Matriculas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

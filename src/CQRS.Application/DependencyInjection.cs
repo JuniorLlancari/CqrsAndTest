@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using CQRS.Application.Behaviors;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CQRS.Application
@@ -10,7 +12,11 @@ namespace CQRS.Application
             services.AddMediatR(configuration =>
             {
                 configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+
             });
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+
             return services;
         }
 

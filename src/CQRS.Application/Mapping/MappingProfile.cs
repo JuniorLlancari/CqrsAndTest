@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using CQRS.Application.DTOs;
-using CQRS.Domain.Alumnos;
-using CQRS.Domain.Cursos;
-using CQRS.Domain.Matriculas;
+using CQRS.Domain.Entities.Alumnos;
+using CQRS.Domain.Entities.Cursos;
+using CQRS.Domain.Entities.Matriculas;
 
 namespace CQRS.Application.Mapping
 {

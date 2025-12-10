@@ -1,4 +1,4 @@
-﻿using CQRS.Domain.Alumnos;
+﻿using CQRS.Domain.Entities.Alumnos;
 
 namespace CQRS.Persistence.Repositories
 {

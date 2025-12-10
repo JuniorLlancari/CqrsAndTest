@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Abstractions\" />
-    <Folder Include="Alumnos\EventHandlers\Integration\" />
+    <Folder Include="Handlers\Alumnos\EventHandlers\Integration\" />
   </ItemGroup>
 
 </Project>

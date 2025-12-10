@@ -1,5 +1,4 @@
-﻿using CQRS.Application.Cursos;
-using CQRS.Application.DTOs;
+﻿using CQRS.Application.Handlers.Cursos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

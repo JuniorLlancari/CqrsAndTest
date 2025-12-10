@@ -1,0 +1,15 @@
+
+tenant_id       = ""
+subscription_id = ""
+client_id       = ""
+client_secret   = ""
+
+resource_group_name = ""
+location            = ""
+
+
+admin_user_sqlserver     = ""
+admin_password_sqlserver = ""
+db_name_sqlserver        = ""
+
+server_name_sqlserver = ""

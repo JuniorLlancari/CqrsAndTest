@@ -1,7 +1,7 @@
 ﻿using CQRS.Domain.Abstraccions;
-using CQRS.Domain.Alumnos;
-using CQRS.Domain.Cursos;
-using CQRS.Domain.Matriculas;
+using CQRS.Domain.Entities.Alumnos;
+using CQRS.Domain.Entities.Cursos;
+using CQRS.Domain.Entities.Matriculas;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
