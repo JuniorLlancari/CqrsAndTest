@@ -46,3 +46,6 @@ variable "admin_password_sqlserver" {
 variable "db_name_sqlserver" {
   type = string
 }
+variable "portal_id" {
+  type = string
+}

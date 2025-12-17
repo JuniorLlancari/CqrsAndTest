@@ -16,3 +16,6 @@ variable "CN_STRING_DB_SQLSERVER" {
 variable "CN_STRING_APP_INSIGHTS" {
   type = string
 }
+variable "portal_id" {
+  type = string
+}
