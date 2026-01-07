@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CQRS.Domain.Abstraccions;
+﻿using CQRS.Domain.Abstraccions;
 using CQRS.Domain.Entities.Alumnos;
 using MediatR;
 

@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace CQRS.Domain.Abstraccions;
 
-public abstract class Entity 
+public abstract class Entity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
     public Guid Id { get; init; }

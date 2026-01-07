@@ -1,4 +1,5 @@
-﻿using CQRS.Domain.Abstraccions;
+﻿using CQRS.Application.Abstractions.Events;
+using CQRS.Domain.Abstraccions;
 using CQRS.Domain.Entities.Alumnos;
 using CQRS.Domain.Entities.Cursos;
 using CQRS.Domain.Entities.Matriculas;
@@ -83,6 +84,8 @@ namespace CQRS.Persistence
 
         private async Task PublishDomainEventsAsync()
         {
+
+
             var domainEvents = ChangeTracker
             .Entries<Entity>()
             .Select(entry => entry.Entity)
@@ -95,8 +98,21 @@ namespace CQRS.Persistence
 
             foreach (var domainEvent in domainEvents)
             {
-                await _publisher.Publish(domainEvent);
+
+                var wrapperType = typeof(DomainEventNotification<>)
+                .MakeGenericType(domainEvent.GetType());
+
+                var notification = Activator.CreateInstance(wrapperType, domainEvent);
+
+                if (notification != null)
+                {
+                    await _publisher.Publish(notification);
+                }
             }
+
+
+
+
 
         }
 

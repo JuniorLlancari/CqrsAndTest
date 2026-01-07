@@ -1,14 +1,19 @@
-﻿using CQRS.Domain.Entities.Alumnos.Events;
+﻿using CQRS.Application.Abstractions.Events;
+using CQRS.Domain.Entities.Alumnos.Events;
 using MediatR;
 
 namespace CQRS.Application.Handlers.Alumnos.EventHandlers.Domain
 {
-    internal class AlumnoCreadoEventHandler : INotificationHandler<AlumnoCreadoEvent>
+
+    public class AlumnoCreadoEventHandler : 
+        INotificationHandler<DomainEventNotification<AlumnoCreadoEvent>>
     {
-        public Task Handle(AlumnoCreadoEvent notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<AlumnoCreadoEvent> notification, CancellationToken cancellationToken)
         {
-            Console.Write("Desde AlumnoCreadoEvent!");
+            var id = notification.DomainEvent.IdAlumno;
+            Console.Write($"Desde AlumnoCreadoEvent! ID del alumno: {id}");
             return Task.CompletedTask;
         }
     }
+    
 }
