@@ -17,9 +17,7 @@
       "applicationUrl": "http://localhost:5254",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLIENT_ID": "11aa569c-3bbd-454c-8441-f0fe9abe4a58",
-        "TENANT_TD": "6ccf8e16-6794-40a9-b9f4-82043aac1cb8",
-        "CLIENT_SECRET": "eZV8Q~cFWHlEbZWtZTXV54Lx8ktn8QH_SEQ.pdcH"
+        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
       }
     },
     "https": {
@@ -30,9 +28,7 @@
       "applicationUrl": "https://localhost:7019;http://localhost:5254",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLIENT_ID": "11aa569c-3bbd-454c-8441-f0fe9abe4a58",
-        "TENANT_TD": "6ccf8e16-6794-40a9-b9f4-82043aac1cb8",
-        "CLIENT_SECRET": "eZV8Q~cFWHlEbZWtZTXV54Lx8ktn8QH_SEQ.pdcH"
+        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
       }
     },
     "IIS Express": {
@@ -41,9 +37,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLIENT_ID": "11aa569c-3bbd-454c-8441-f0fe9abe4a58",
-        "TENANT_TD": "6ccf8e16-6794-40a9-b9f4-82043aac1cb8",
-        "CLIENT_SECRET": "eZV8Q~cFWHlEbZWtZTXV54Lx8ktn8QH_SEQ.pdcH"
+        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
       }
     }
   }

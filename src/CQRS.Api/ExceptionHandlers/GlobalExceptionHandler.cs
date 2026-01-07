@@ -2,7 +2,6 @@
 using CQRS.Application.Exceptions;
 using CQRS.Common.Constants;
 using CQRS.Domain.Models.ApplicationInsights;
-using CQRS.External.ApplicationInsights;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 

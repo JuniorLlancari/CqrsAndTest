@@ -10,7 +10,6 @@ using FluentValidation;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var keyVaultUrl = builder.Configuration["keyVaultUrl"] ?? string.Empty;
 
 
 builder.Services.AddControllers();
@@ -18,21 +17,14 @@ builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 
- 
 
- 
-string tenantId = Environment.GetEnvironmentVariable("TENANT_TD") ?? string.Empty;
-string clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
-string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;
 
-var credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
-builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credentials);
-
- 
+var keyVaultUrl = Environment.GetEnvironmentVariable("KEYVAULTURL") ?? string.Empty;
+builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
 
 
 
- 
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
