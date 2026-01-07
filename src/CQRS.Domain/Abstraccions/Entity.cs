@@ -1,4 +1,3 @@
-using MediatR;
 
 namespace CQRS.Domain.Abstraccions;
 
