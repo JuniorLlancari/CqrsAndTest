@@ -20,20 +20,15 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
  
 
-if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-{
-    string tenantId = Environment.GetEnvironmentVariable("TENANT_TD") ?? string.Empty;
-    string clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
-    string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;
+ 
+string tenantId = Environment.GetEnvironmentVariable("TENANT_TD") ?? string.Empty;
+string clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
+string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;
 
-    var tokenCredentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
-    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), tokenCredentials);
-}
-else
-{
-    //builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
+var credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
+builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credentials);
 
-}
+ 
 
 
 

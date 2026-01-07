@@ -28,6 +28,7 @@
 
 	<PropertyGroup>
 		<InvariantGlobalization>false</InvariantGlobalization>
+		<UserSecretsId>763ec01d-a0b6-4977-9e1f-b5e15cd9cae8</UserSecretsId>
 	</PropertyGroup>
 
 </Project>
