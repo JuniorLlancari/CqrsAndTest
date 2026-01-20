@@ -48,21 +48,9 @@ app.UseExceptionHandler();
 
 
 
+await DataSeeder.CreateDbIfNotExists(app);
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var scopedProvider = scope.ServiceProvider;
-    try
-    {
-        var context = scopedProvider.GetRequiredService<CQRSDbContext>();
-        await CQRSDbContextSeed.InitialiseDatabaseAsync(context);
-    }
-    catch (Exception ex)
-    {
-        app.Logger.LogError(ex, "An error occurred seeding the DB.");
-    }
-}
 
 
 
