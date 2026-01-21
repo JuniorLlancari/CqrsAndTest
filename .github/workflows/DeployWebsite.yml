@@ -8,6 +8,10 @@ jobs:
   build:
     name: Docker build
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_resource_group_name: "rg-ms-cqrs"
+      TF_VAR_location:           "eastus2"
+
     steps:
     - name: Check out the repo
       uses: actions/checkout@v3 

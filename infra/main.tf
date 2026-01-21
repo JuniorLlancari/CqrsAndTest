@@ -40,3 +40,15 @@ module "keyvalut" {
   portal_id              = var.portal_id
   depends_on             = [azurerm_resource_group.rg]
 }
+
+
+
+module "acapp" {
+  source              = "./acapp"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  key_value_url       = module.keyvalut.key_vault_url
+  key_value_id        = module.keyvalut.key_vault_id
+
+  depends_on = [module.keyvalut]
+}
