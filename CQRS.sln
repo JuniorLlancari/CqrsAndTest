@@ -31,8 +31,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.Common", "04.Common", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBF82CA1-750F-4C60-B93B-209BBA3A4871}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
+		.github\workflows\DeployWebsite.yml = .github\workflows\DeployWebsite.yml
 		Directory.Packages__.props = Directory.Packages__.props
+		.github\workflows\infrastructureDeploy.yml = .github\workflows\infrastructureDeploy.yml
+		.github\workflows\main.yml = .github\workflows\main.yml
 	EndProjectSection
 EndProject
 Global

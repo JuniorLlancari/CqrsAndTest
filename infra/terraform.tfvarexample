@@ -1,15 +1,19 @@
 
-tenant_id       = ""
-subscription_id = ""
-client_id       = ""
-client_secret   = ""
+subscription_id     = ""
 
 resource_group_name = ""
 location            = ""
-
+portal_id           = ""
 
 admin_user_sqlserver     = ""
 admin_password_sqlserver = ""
 db_name_sqlserver        = ""
+server_name_sqlserver    = ""
 
-server_name_sqlserver = ""
+tfstate_rg_name        = ""
+tfstate_stg_name       = ""
+tfstate_container_name = ""
+tfstate_key            = ""
+
+
+

@@ -2,10 +2,12 @@
 data "azurerm_client_config" "current" {}
 
 
-
+resource "random_id" "kvname" {
+  byte_length = 4
+}
 
 resource "azurerm_key_vault" "key_valult" {
-  name                      = "servicekeyvalult"
+  name                      = "svckeyvalult${random_id.kvname.hex}"
   location                  = var.location
   resource_group_name       = var.resource_group_name
   tenant_id                 = data.azurerm_client_config.current.tenant_id
@@ -23,6 +25,9 @@ resource "azurerm_role_assignment" "rolterraform" {
   scope                = azurerm_key_vault.key_valult.id
   role_definition_name = "Key Vault Administrator"
   principal_id         = data.azurerm_client_config.current.object_id
+  lifecycle {
+    ignore_changes = [principal_id, role_definition_name, scope]
+  }
 }
 
 

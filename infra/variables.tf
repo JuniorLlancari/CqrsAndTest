@@ -1,24 +1,12 @@
 variable "subscription_id" {
-  description = "Azure Subscription ID"
-  type        = string
-}
+  type    = string
+  default = ""
 
-variable "client_id" {
-  description = "Azure Client ID"
-  type        = string
 }
-
-variable "client_secret" {
-  description = "Azure Client Secret"
-  type        = string
-  sensitive   = true
+variable "portal_id" {
+  type    = string
+  default = ""
 }
-
-variable "tenant_id" {
-  description = "Azure Tenant ID"
-  type        = string
-}
-
 
 variable "resource_group_name" {
   type = string
@@ -46,6 +34,22 @@ variable "admin_password_sqlserver" {
 variable "db_name_sqlserver" {
   type = string
 }
-variable "portal_id" {
+
+
+
+variable "tfstate_rg_name" {
   type = string
 }
+
+variable "tfstate_stg_name" {
+  type = string
+}
+variable "tfstate_container_name" {
+  type = string
+}
+
+variable "tfstate_key" {
+  type = string
+}
+
+
