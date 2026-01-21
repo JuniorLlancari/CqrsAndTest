@@ -68,6 +68,8 @@ jobs:
           -backend-config="tenant_id=${{ secrets.AZURE_AD_TENANT_ID }}" \
           -backend-config="client_id=${{ secrets.AZURE_AD_CLIENT_ID }}" \
           -backend-config="use_oidc=true"
+      env:
+        ARM_USE_OIDC: true # Forzamos el uso de OIDC en este paso específico
       working-directory: ./infra
 
     - name: Terraform validate
