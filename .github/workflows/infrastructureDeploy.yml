@@ -28,6 +28,7 @@ jobs:
       ARM_SUBSCRIPTION_ID:    ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID:          ${{ secrets.ARM_TENANT_ID }}
       ARM_USE_OIDC:           true
+      TF_VAR_use_oidc: true
 
       # Variables de Infraestructura (Públicas)
       TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -71,9 +72,9 @@ jobs:
           -backend-config="storage_account_name=$TF_VAR_tfstate_stg_name" \
           -backend-config="container_name=$TF_VAR_tfstate_container_name" \
           -backend-config="key=$TF_VAR_tfstate_key" \
-          -backend-config="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
-          -backend-config="tenant_id=${{ secrets.AZURE_AD_TENANT_ID }}" \
-          -backend-config="client_id=${{ secrets.AZURE_AD_CLIENT_ID }}" \
+          # -backend-config="subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+          # -backend-config="tenant_id=${{ secrets.AZURE_AD_TENANT_ID }}" \
+          # -backend-config="client_id=${{ secrets.AZURE_AD_CLIENT_ID }}" \
           -backend-config="use_oidc=true"
       env:
         ARM_USE_OIDC: true # Forzamos el uso de OIDC en este paso específico
