@@ -1,11 +1,19 @@
 provider "azurerm" {
   subscription_id = var.subscription_id
+
+  # Solo usa credenciales si están disponibles (local)
+  client_id     = var.client_id != "" ? var.client_id : null
+  client_secret = var.client_secret != "" ? var.client_secret : null
+  tenant_id     = var.tenant_id != "" ? var.tenant_id : null
+
+  # OIDC se activa automáticamente en CI/CD si hay ARM_USE_OIDC=true
+  use_oidc = var.use_oidc
+
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
     }
   }
-  use_oidc = true
 }
 
 terraform {
@@ -24,7 +32,6 @@ terraform {
 
 
     # Muy importante para que el comando 'init' en el pipeline no falle
-    use_oidc = true
   }
 
   required_version = ">= 1.1.0"

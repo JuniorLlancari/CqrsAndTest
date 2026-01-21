@@ -44,7 +44,7 @@ module "keyvalut" {
 
 
 module "acapp" {
-  source              = "./acapp"
+  source              = "./containerapp"
   resource_group_name = var.resource_group_name
   location            = var.location
   key_value_url       = module.keyvalut.key_vault_url
