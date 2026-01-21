@@ -13,6 +13,11 @@ on:
           required: false
           default: 'Mantenimiento manual'
 
+# --- ESTA ES LA PARTE QUE FALTA ---
+permissions:
+  id-token: write  # Requerido para solicitar el JWT de GitHub
+  contents: read   # Requerido para acciones/checkout
+# ----------------------------------
  
 jobs:
   build:
