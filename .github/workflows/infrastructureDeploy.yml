@@ -52,9 +52,12 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Terraform init
-      # Si el bloque 'backend' en tu .tf está vacío, necesitas pasar todos los config aquí
       run: |
         terraform init \
+          -backend-config="resource_group_name=$TF_VAR_tfstate_rg_name" \
+          -backend-config="storage_account_name=$TF_VAR_tfstate_stg_name" \
+          -backend-config="container_name=$TF_VAR_tfstate_container_name" \
+          -backend-config="key=$TF_VAR_tfstate_key" \
           -backend-config="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: ./infra
 
