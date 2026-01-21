@@ -10,10 +10,7 @@ admin_password_sqlserver = ""
 db_name_sqlserver        = ""
 server_name_sqlserver    = ""
 
-tfstate_rg_name        = ""
-tfstate_stg_name       = ""
-tfstate_container_name = ""
-tfstate_key            = ""
+
 
 
 

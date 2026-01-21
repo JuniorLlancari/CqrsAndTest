@@ -17,10 +17,12 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = var.tfstate_rg_name
-    storage_account_name = var.tfstate_stg_name
-    container_name       = var.tfstate_container_name
-    key                  = var.tfstate_key
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "stcorebankstate01"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+
+
     # Muy importante para que el comando 'init' en el pipeline no falle
     use_oidc = true
   }

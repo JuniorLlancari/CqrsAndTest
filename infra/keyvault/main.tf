@@ -3,7 +3,7 @@ data "azurerm_client_config" "current" {}
 
 
 resource "random_id" "kvname" {
-  byte_length = 4
+  byte_length = 3
 }
 
 resource "azurerm_key_vault" "key_valult" {
@@ -25,9 +25,7 @@ resource "azurerm_role_assignment" "rolterraform" {
   scope                = azurerm_key_vault.key_valult.id
   role_definition_name = "Key Vault Administrator"
   principal_id         = data.azurerm_client_config.current.object_id
-  lifecycle {
-    ignore_changes = [principal_id, role_definition_name, scope]
-  }
+
 }
 
 

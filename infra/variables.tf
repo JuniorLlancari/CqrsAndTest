@@ -37,19 +37,3 @@ variable "db_name_sqlserver" {
 
 
 
-variable "tfstate_rg_name" {
-  type = string
-}
-
-variable "tfstate_stg_name" {
-  type = string
-}
-variable "tfstate_container_name" {
-  type = string
-}
-
-variable "tfstate_key" {
-  type = string
-}
-
-

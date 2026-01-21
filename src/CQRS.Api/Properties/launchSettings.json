@@ -17,7 +17,7 @@
       "applicationUrl": "http://localhost:5254",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
+        "KEYVAULTURL": "https://svckeyvalultcb51c745.vault.azure.net/"
       }
     },
     "https": {
@@ -28,7 +28,7 @@
       "applicationUrl": "https://localhost:7019;http://localhost:5254",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
+        "KEYVAULTURL": "https://svckeyvalultcb51c745.vault.azure.net/"
       }
     },
     "IIS Express": {
@@ -37,7 +37,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "KEYVAULTURL": "https://servicekeyvalult.vault.azure.net/"
+        "KEYVAULTURL": "https://svckeyvalultcb51c745.vault.azure.net/"
       }
     }
   }
