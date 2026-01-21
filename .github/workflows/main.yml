@@ -1,11 +1,9 @@
 name: Docker Image CI
 
-# on:
-#   push:
-#     branches: [ "dev" ]
-#   pull_request:
-#     branches: [ "dev" ]
+ 
 on:
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
       inputs:
         reason:
@@ -85,14 +83,14 @@ jobs:
     - name: Update Container App
       run: |
         az containerapp update \
-          --name "juniorllancariapp" \
+          --name "cqrsappjllv" \
           --resource-group "rg-ms-cqrs" \
           --image docker.io/juniorllancari/cqrswebapi:${{ github.sha }}
     
     - name: Verify Deployment
       run: |
         az containerapp show \
-          --name "juniorllancariapp" \
+          --name "cqrsappjllv" \
           --resource-group "rg-ms-cqrs" \
           --query "properties.latestRevisionName" \
           -o tsv
