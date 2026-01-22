@@ -37,10 +37,7 @@ variable "db_name_sqlserver" {
 
 
 
-variable "use_oidc" {
-  type    = bool
-  default = false
-}
+
 variable "serviceprincipal_id" {
   type = string
 }

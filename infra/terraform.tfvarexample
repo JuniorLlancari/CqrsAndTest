@@ -1,16 +1,11 @@
-
 subscription_id     = ""
-
 resource_group_name = ""
 location            = ""
-portal_id           = ""
 
 admin_user_sqlserver     = ""
 admin_password_sqlserver = ""
 db_name_sqlserver        = ""
 server_name_sqlserver    = ""
 
-
-
-
-
+portal_id           = ""
+serviceprincipal_id = ""

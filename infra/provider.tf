@@ -1,7 +1,6 @@
 provider "azurerm" {
   subscription_id = var.subscription_id
 
-  # Solo usa credenciales si están disponibles (local)
   # client_id     = var.client_id 
   # client_secret = var.client_secret 
   # tenant_id     = var.tenant_id 
@@ -27,9 +26,6 @@ terraform {
     storage_account_name = "stcorebankstate01"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
-
-
-    # Muy importante para que el comando 'init' en el pipeline no falle
   }
 
   required_version = ">= 1.1.0"

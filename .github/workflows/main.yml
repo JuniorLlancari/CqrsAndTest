@@ -11,11 +11,14 @@ on:
           required: false
           default: 'Mantenimiento manual'
 
-# --- ESTA ES LA PARTE QUE FALTA ---
+env:
+  REPOSITORIO_IMAGEN: 'juniorllancari/cqrswebapi'
+  AZ_GRUPO_RECURSO: 'rg-ms-cqrs'
+  AZ_CONTAINER_APP: 'cqrsappjllv'
+
 permissions:
-  id-token: write  # Requerido para solicitar el JWT de GitHub
-  contents: read   # Requerido para acciones/checkout
-# ----------------------------------
+  id-token: write  
+  contents: read   
  
 jobs:
   build:
@@ -42,7 +45,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: juniorllancari/cqrswebapi
+        images: ${{ env.REPOSITORIO_IMAGEN }}
         tags: |
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
@@ -55,8 +58,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: |
-          juniorllancari/cqrswebapi:${{ github.sha }}
-          juniorllancari/cqrswebapi:latest
+          ${{ env.REPOSITORIO_IMAGEN }}:${{ github.sha }}
+          ${{ env.REPOSITORIO_IMAGEN }}:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -65,7 +68,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # environment: ${{ github.event.inputs.environment || 'dev' }}
     
     steps:
     - name: Azure CLI login
@@ -83,19 +85,19 @@ jobs:
     - name: Update Container App
       run: |
         az containerapp update \
-          --name "cqrsappjllv" \
-          --resource-group "rg-ms-cqrs" \
-          --image docker.io/juniorllancari/cqrswebapi:${{ github.sha }}
+          --name ${{ env.AZ_CONTAINER_APP }} \
+          --resource-group ${{ env.AZ_GRUPO_RECURSO }} \
+          --image docker.io/${{ env.REPOSITORIO_IMAGEN }}:${{ github.sha }}
     
     - name: Verify Deployment
       run: |
         az containerapp show \
-          --name "cqrsappjllv" \
-          --resource-group "rg-ms-cqrs" \
+          --name ${{ env.AZ_CONTAINER_APP }} \
+          --resource-group ${{ env.AZ_GRUPO_RECURSO }} \
           --query "properties.latestRevisionName" \
           -o tsv
     
     - name: Log deployment reason
       run: |
         echo "Deployment reason: ${{ github.event.inputs.reason }}"
-        echo "Deployed image: juniorllancari/cqrswebapi:${{ github.sha }}"
+        echo "Deployed image: ${{ env.REPOSITORIO_IMAGEN }}:${{ github.sha }}"
