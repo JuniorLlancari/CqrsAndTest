@@ -19,3 +19,7 @@ variable "CN_STRING_APP_INSIGHTS" {
 variable "portal_id" {
   type = string
 }
+
+variable "serviceprincipal_id" {
+  type = string
+}

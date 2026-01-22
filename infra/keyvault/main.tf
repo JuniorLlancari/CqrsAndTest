@@ -26,19 +26,18 @@ resource "azurerm_role_assignment" "rolportal" {
   principal_id         = var.portal_id
   principal_type       = "User" # 👈 AGREGA ESTA LÍNEA
 
-  skip_service_principal_aad_check = true
+  # skip_service_principal_aad_check = true
 
   depends_on = [time_sleep.wait_for_kv]
 
 }
 resource "azurerm_role_assignment" "rolterraform" {
-  scope                            = azurerm_key_vault.key_valult.id
-  role_definition_name             = "Key Vault Administrator"
-  principal_id                     = data.azurerm_client_config.current.object_id
-  skip_service_principal_aad_check = true
-  principal_type                   = "ServicePrincipal" # 👈 AGREGA ESTA LÍNEA
-  depends_on                       = [time_sleep.wait_for_kv]
-
+  scope                = azurerm_key_vault.key_valult.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = var.serviceprincipal_id #data.azurerm_client_config.current.object_id
+  # skip_service_principal_aad_check = true
+  # principal_type                   = "ServicePrincipal" # 👈 AGREGA ESTA LÍNEA
+  depends_on = [time_sleep.wait_for_kv]
 }
 
 

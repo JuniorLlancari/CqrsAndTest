@@ -38,6 +38,7 @@ module "keyvalut" {
   CN_STRING_DB_SQLSERVER = local.sqlserver_connection
   CN_STRING_APP_INSIGHTS = module.appinsights.appinsights_connection_string
   portal_id              = var.portal_id
+  serviceprincipal_id    = var.serviceprincipal_id
   depends_on             = [azurerm_resource_group.rg]
 }
 
