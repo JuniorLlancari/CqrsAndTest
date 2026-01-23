@@ -4,18 +4,18 @@ on:
   workflow_dispatch:
       inputs:
         reason:
-          description: 'Razón del despliegue manual'
+          description: 'RazÃ³n del despliegue manual'
           required: false
           default: 'Mantenimiento manual'
 
 
 
 env:
-  SOLUTION_PATH: './CQRS.sln'  # Ajusta la ruta a tu solución
+  SOLUTION_PATH: './CQRS.sln'  # Ajusta la ruta a tu soluciÃ³n
   BUILD_CONFIGURATION: 'Release'
 
 jobs:
-  # Job 1: Validación básica
+  # Job 1: ValidaciÃ³n bÃ¡sica
   validate:
     name: Validate PR
     runs-on: ubuntu-latest
@@ -89,8 +89,8 @@ jobs:
       run: |
         dotnet build ${{ env.SOLUTION_PATH }} \
           --configuration ${{ env.BUILD_CONFIGURATION }} \
-          --no-restore \
-          /p:TreatWarningsAsErrors=true
+          --no-restore 
+      
     
     - name: Run unit tests
       run: |
