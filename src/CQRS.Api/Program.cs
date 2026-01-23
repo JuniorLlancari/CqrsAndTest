@@ -26,8 +26,21 @@ builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCre
 
 
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Version = "v1",
+        Title = "CQRS API",
+        Description = "API con patrón CQRS",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "Junior",
+            Email = "juniorllancari@gmail.com"
+        }
+    });
 
+});
 
 builder.Services
     .AddApplication()
@@ -60,7 +73,11 @@ await DataSeeder.CreateDbIfNotExists(app);
 if (app.Environment.IsDevelopment() || true)
 {
     app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "CQRS API v1");
+        options.RoutePrefix = string.Empty; // Para que Swagger UI esté en la raíz (opcional)
+    });
 }
 
 app.UseHttpsRedirection();
