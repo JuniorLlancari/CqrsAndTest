@@ -26,7 +26,7 @@ builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCre
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 
 builder.Services
@@ -60,7 +60,7 @@ await DataSeeder.CreateDbIfNotExists(app);
 if (app.Environment.IsDevelopment() || true)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

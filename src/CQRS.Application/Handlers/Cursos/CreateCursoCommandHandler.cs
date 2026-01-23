@@ -1,6 +1,5 @@
 ﻿using CQRS.Domain.Abstraccions;
 using CQRS.Domain.Entities.Cursos;
-using FluentValidation;
 using MediatR;
 
 namespace CQRS.Application.Handlers.Cursos
@@ -8,8 +7,8 @@ namespace CQRS.Application.Handlers.Cursos
 
     public class CreateCursoCommandRequest :IRequest<Result<Guid>>
     {
-        public string Titulo { get; set; }
-        public string Descripcion { get; set;}
+        public required  string Titulo { get; set; }
+        public required  string Descripcion { get; set;}
         public DateTime FechaPublicacion { get; set; }
         public decimal Precio { get; set; }
     }

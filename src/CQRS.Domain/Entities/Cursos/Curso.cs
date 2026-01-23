@@ -51,7 +51,7 @@ namespace CQRS.Domain.Entities.Cursos
         public DateTime? FechaPublicacion { get; private set; }
 
         public DateTime? FechaCreacion { get; private set; }
-
+        
         public decimal Precio { get; private  set; }
 
         public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
