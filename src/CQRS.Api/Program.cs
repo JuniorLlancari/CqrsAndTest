@@ -32,11 +32,11 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v1",
         Title = "CQRS API",
-        Description = "API con patrón CQRS",
+        Description = "API CQRS",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
             Name = "Junior",
-            Email = "juniorllancari@gmail.com"
+            Email = "juniorllancariv@gmail.com"
         }
     });
 
