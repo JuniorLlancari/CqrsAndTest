@@ -23,7 +23,7 @@ namespace CQRS.Domain.Entities.Alumnos
         }
 
 
-        public string NombreAlumno { get; private set; }
+        public string NombreAlumno { get; private set; } = string.Empty;
         public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
         public AlumnoEstado Estado { get; set; }
     }

@@ -13,7 +13,7 @@ namespace CQRS.Application.Handlers.Matriculas
     {
         public Guid CursoId { get; set; }
         public Guid AlumnoId { get; set; }
-        public string Codigo { get; set; }
+        public required string Codigo { get; set; }
 
     }
 

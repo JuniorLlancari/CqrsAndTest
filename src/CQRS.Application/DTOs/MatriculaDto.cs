@@ -17,7 +17,7 @@ namespace CQRS.Application.DTOs
 
         public Guid CursoId { get; set; }
         public string NombreCurso  { get; set; } = null!;
-        public string Codigo { get; set; }
+        public required string Codigo { get; set; }
 
     }
 }

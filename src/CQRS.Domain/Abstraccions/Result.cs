@@ -37,7 +37,7 @@ public class Result
       ? Success(value)
       : Failure<TValue>(Error.NullValue);
 
-    public IEnumerable<ValidationError> ErrorsDetail { get; }
+    public IEnumerable<ValidationError> ErrorsDetail { get; } = Enumerable.Empty<ValidationError>();
 
 
 }
@@ -50,7 +50,10 @@ public class Result<Tvalue> : Result
     {
         _value = value;
     }
-    public Tvalue Value => _value;
+    public Tvalue? Value => _value;
+
+ 
+
     public static implicit operator Result<Tvalue>(Tvalue value) => Create(value);
 
 }

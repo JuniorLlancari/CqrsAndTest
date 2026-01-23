@@ -8,7 +8,7 @@ namespace CQRS.Application.Handlers.Cursos
     public class CreateCursoCommandRequest :IRequest<Result<Guid>>
     {
         public required  string Titulo { get; set; }
-        public required  string Descripcion { get; set;}
+        public  string Descripcion { get; set;} = string.Empty;
         public DateTime FechaPublicacion { get; set; }
         public decimal Precio { get; set; }
     }

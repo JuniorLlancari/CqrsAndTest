@@ -9,6 +9,6 @@ namespace CQRS.Application.DTOs
     public class AlumnoDto
     {
         public Guid Id { get; set; }
-        public string NombreAlumno { get; set; }
+        public required string NombreAlumno { get; set; }  
     }
 }

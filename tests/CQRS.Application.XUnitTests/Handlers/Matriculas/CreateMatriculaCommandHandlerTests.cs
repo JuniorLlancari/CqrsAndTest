@@ -47,7 +47,7 @@ namespace CQRS.Application.XUnitTests.Handlers.Matriculas
 
             _cursoRepositoryMock
                 .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Curso?)null);
+                .ReturnsAsync((Curso)null);
 
             // Act
             var result = await _handler.Handle(request, default);
@@ -74,7 +74,7 @@ namespace CQRS.Application.XUnitTests.Handlers.Matriculas
 
             _alumnoRepositoryMock
                 .Setup(r => r.ObtenerPorIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Alumno?)null);
+                .ReturnsAsync((Alumno)null);
 
             // Act
             var result = await _handler.Handle(request, default);
@@ -142,7 +142,7 @@ namespace CQRS.Application.XUnitTests.Handlers.Matriculas
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>()
                 ))
-            .ReturnsAsync((Matricula?)null);
+            .ReturnsAsync((Matricula)null);
 
             _matriculaRepositoryMock
                 .Setup(r => r.AgregarAsync(It.IsAny<Matricula>()))

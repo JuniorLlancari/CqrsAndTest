@@ -6,11 +6,11 @@ namespace CQRS.Application.Handlers.Alumnos
 {
     public class CreateAlumnoCommandRequest :IRequest<Result<Guid>>
     {
-        public string NombreAlumno { get; set; }
+        public required string NombreAlumno { get; set; }
     }
     public class CreateAlumnoResponse
     {
-        public string NombreAlumno { get; set; }
+        public  required string NombreAlumno { get; set; }
     }
 
     public class CreateAlumnoCommandHandler : IRequestHandler<CreateAlumnoCommandRequest, Result<Guid>>

@@ -40,6 +40,6 @@ public class Matricula : Entity
     public Alumno Alumno { get; private set; } = null!;
     public Guid CursoId { get; private set; }
     public Curso Curso { get; private set; } = null!;
-    public string Codigo { get; private set; }
+    public string Codigo { get; private set; } = string.Empty;
 
 }

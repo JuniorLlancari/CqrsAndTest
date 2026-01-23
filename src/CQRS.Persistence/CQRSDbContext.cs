@@ -1,4 +1,6 @@
-﻿using CQRS.Application.Abstractions.Events;
+﻿#nullable disable
+
+using CQRS.Application.Abstractions.Events;
 using CQRS.Domain.Abstraccions;
 using CQRS.Domain.Entities.Alumnos;
 using CQRS.Domain.Entities.Cursos;

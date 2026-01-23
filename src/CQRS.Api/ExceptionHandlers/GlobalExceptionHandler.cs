@@ -1,4 +1,6 @@
-﻿using CQRS.Application.ApplicationInsights;
+﻿#nullable enable
+
+using CQRS.Application.ApplicationInsights;
 using CQRS.Application.Exceptions;
 using CQRS.Common.Constants;
 using CQRS.Domain.Models.ApplicationInsights;
@@ -93,7 +95,7 @@ namespace CQRS.Api.ExceptionHandlers
 
         internal record ApiResponse
         (
-            object Value,
+            object? Value,
             bool IsSuccess,
             bool IsFailure,
             string Detail,
@@ -142,7 +144,7 @@ namespace CQRS.Api.ExceptionHandlers
                 Detail: exceptionDetail.Detail, 
                 Errors: exceptionDetail.Errors,
                 error: apiError,
-                (ProblemDetails)problemDetailsApi ?? null
+                ProblemDetails: problemDetailsApi as ProblemDetails
             );
         }
 
