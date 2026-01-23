@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\infrastructureDeploy.yml = .github\workflows\infrastructureDeploy.yml
 		Directory.Packages.props = Directory.Packages.props
 		.github\workflows\main.yml = .github\workflows\main.yml
+		pr.yml = pr.yml
 	EndProjectSection
 EndProject
 Global
