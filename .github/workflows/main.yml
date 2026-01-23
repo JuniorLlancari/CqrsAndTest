@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
     paths-ignore:
       - 'infra/**'
+      - '.github/workflows/**'
   workflow_dispatch:
       inputs:
         reason:

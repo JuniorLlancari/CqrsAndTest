@@ -1,0 +1,168 @@
+﻿name: Pull Request CI
+
+on:
+  workflow_dispatch:
+      inputs:
+        reason:
+          description: 'Razón del despliegue manual'
+          required: false
+          default: 'Mantenimiento manual'
+
+
+
+env:
+  SOLUTION_PATH: './CQRS.sln'  # Ajusta la ruta a tu solución
+  BUILD_CONFIGURATION: 'Release'
+
+jobs:
+  # Job 1: Validación básica
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Check for merge conflicts
+      run: |
+        if git diff --check ${{ github.event.pull_request.base.sha }} ${{ github.sha }}; then
+          echo "✓ No merge conflicts detected"
+        else
+          echo "✗ Merge conflicts detected"
+          exit 1
+        fi
+    
+    - name: Validate solution file exists
+      run: |
+        if [ -f "${{ env.SOLUTION_PATH }}" ]; then
+          echo "✓ Solution file found: ${{ env.SOLUTION_PATH }}"
+        else
+          echo "✗ Solution file not found: ${{ env.SOLUTION_PATH }}"
+          exit 1
+        fi
+    
+    - name: Validate global.json exists
+      run: |
+        if [ -f "global.json" ]; then
+          echo "✓ global.json found"
+          cat global.json
+        else
+          echo "✗ global.json not found"
+          exit 1
+        fi
+
+  # Job 2: Build y tests
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: validate
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET (from global.json)
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+    
+    - name: Display .NET version
+      run: dotnet --version
+    
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
+    
+    - name: Build solution
+      run: |
+        dotnet build ${{ env.SOLUTION_PATH }} \
+          --configuration ${{ env.BUILD_CONFIGURATION }} \
+          --no-restore 
+    
+    - name: Run unit tests
+      run: |
+        dotnet test ${{ env.SOLUTION_PATH }} \
+          --configuration ${{ env.BUILD_CONFIGURATION }} \
+          --no-build \
+          --verbosity normal \
+          --logger "trx;LogFileName=test-results.trx" \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: ./TestResults/**/*.trx
+        retention-days: 7
+    
+    - name: Upload code coverage
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage
+        path: ./TestResults/**/coverage.cobertura.xml
+        retention-days: 7
+    
+    - name: Code Coverage Summary
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      if: always()
+      with:
+        filename: ./TestResults/**/coverage.cobertura.xml
+        badge: true
+        format: markdown
+        output: both
+        thresholds: '60 80'
+    
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request' && always()
+      with:
+        recreate: true
+        path: code-coverage-results.md
+
+  # Job 3: Docker build verification
+  docker-build:
+    name: Docker Build Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build-and-test
+    if: github.event.pull_request.draft == false
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build Docker image (no push)
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: src/CQRS.Api/Dockerfile
+        platforms: linux/amd64
+        push: false
+        tags: juniorllancari/cqrswebapi:pr-${{ github.event.pull_request.number }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          BUILDKIT_INLINE_CACHE=1
+    
+    - name: Docker build success
+      run: |
+        echo "✓ Docker image built successfully"
+        echo "Image tag: juniorllancari/cqrswebapi:pr-${{ github.event.pull_request.number }}"
